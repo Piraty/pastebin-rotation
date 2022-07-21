@@ -1,0 +1,90 @@
+#!/bin/sh
+# [CMD] | pbr [FILE..] - send data to various paste services
+
+set -eu
+
+: "${PBR_INDEX_FILE="${XDG_CACHE_HOME:-"$HOME/.cache"}/pbr/last_service_index"}"
+: "${PBR_MODE:="round-robin"}"
+
+error() {
+	printf 'ERROR: %s\n' "$@"
+	exit 1
+}
+
+store_index() {
+	index="$1"
+	mkdir -p "$(dirname "$PBR_INDEX_FILE")"
+	printf '%s' "$index" >"$PBR_INDEX_FILE"
+}
+
+#
+# services
+#
+# all service wrapper functions expect exactly one argument, which needs to be
+# a path
+
+ix_io() {
+	curl -F 'f:1=@-' ix.io <"$1"
+}
+
+termbin_com() {
+	nc termbin.com 9999 <"$1"
+}
+
+ttm_sh() {
+	curl -F "file=@-" https://ttm.sh <"$1"
+}
+
+OxO_st() {
+	curl -F'file=@-' https://0x0.st <"$1"
+}
+
+available_services="ix_io termbin_com ttm_sh OxO_st"
+
+service_index_current=0
+service_index_max="$(printf '%s' "$available_services" | wc -w)"
+# determine the next service's index
+get_current_service_index() {
+	case "$PBR_MODE" in
+		round-robin)
+			service_index_current="$(cat "$PBR_INDEX_FILE" 2>/dev/null || echo 0)"
+			service_index_current="$((service_index_current + 1))"
+			[ "$service_index_current" -le "$service_index_max" ] || service_index_current=1
+
+			store_index "$service_index_current"
+			;;
+		random)
+			service_index_current="$(shuf -i 1-"$service_index_max" -n1)"
+			;;
+	esac
+	printf '%s' "$service_index_current"
+}
+
+# return service wrapper function name from the list of available services
+get_service_handler() {
+	echo "$available_services" | cut -d' ' -f"$(get_current_service_index)"
+}
+
+# technically, it's not wrong to read from stdin and from arguments at the same
+# time, but this is smell we better warn about
+if [ -p /dev/stdin ] && [ "$#" -gt 0 ]; then
+	error "Cannot mix pipes with args"
+fi
+
+if [ -p /dev/stdin ]; then
+	set -- /dev/stdin "$@"
+fi
+if [ "$#" -eq 0 ]; then
+	error "No input"
+fi
+
+for f; do
+	[ -p "$f" ] && continue
+	[ -f "$f" ] || error "File not found: $f"
+	[ -s "$f" ] || error "File empty: $f"
+done
+
+for f; do
+	srv="$(get_service_handler)"
+	"$srv" "$f"
+done
