@@ -69,13 +69,12 @@ get_service_handler() {
 	echo "$available_services" | cut -d' ' -f"$(get_current_service_index)"
 }
 
-# technically, it's not wrong to read from stdin and from arguments at the same
-# time, but this is smell we better warn about
-if [ -p /dev/stdin ] && [ "$#" -gt 0 ]; then
-	error "Cannot mix pipes with args"
-fi
-
+# pipe mode
 if [ -p /dev/stdin ]; then
+	# technically, it's not wrong to read from stdin and from arguments at the same
+	# time, but this is smell we better warn about
+	[ "$#" -eq 0 ] || error "Do not mix pipes with args"
+
 	set -- /dev/stdin "$@"
 fi
 if [ "$#" -eq 0 ]; then
