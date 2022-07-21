@@ -23,6 +23,10 @@ store_index() {
 # all service wrapper functions expect exactly one argument, which needs to be
 # a path
 
+dpaste_com() {
+	curl -F "content=<-" https://dpaste.com/api/v2/ <"$1"
+}
+
 ix_io() {
 	curl -F 'f:1=@-' ix.io <"$1"
 }
@@ -39,7 +43,7 @@ OxO_st() {
 	curl -F'file=@-' https://0x0.st <"$1"
 }
 
-available_services="ix_io termbin_com ttm_sh OxO_st"
+available_services="dpaste_com ix_io termbin_com ttm_sh OxO_st"
 
 service_index_current=0
 service_index_max="$(printf '%s' "$available_services" | wc -w)"
