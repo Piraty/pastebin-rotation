@@ -1,12 +1,15 @@
 SRC := pbr
 
 
-all:
+all: $(SRC)
 
-test: all
+lint: all
 	shfmt -ci -d $(SRC)
 	shellcheck $(SRC)
 
-check: test
+tests/%.log: all
+	./tests/$(*) > ./$(@)
+
+check: lint tests/round-robin.sh.log
 
 .PHONY: all check test
