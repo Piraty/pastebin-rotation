@@ -77,9 +77,6 @@ if [ -p /dev/stdin ]; then
 
 	set -- /dev/stdin "$@"
 fi
-if [ "$#" -eq 0 ]; then
-	error "No input"
-fi
 
 for f; do
 	[ -p "$f" ] && continue
