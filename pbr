@@ -35,6 +35,10 @@ ix_io() {
 	_curl -F 'f:1=@-' ix.io <"$1"
 }
 
+paste_rs() {
+	_curl --data-binary '@-' https://paste.rs <"$1"
+}
+
 termbin_com() {
 	nc termbin.com 9999 <"$1"
 }
@@ -47,7 +51,7 @@ OxO_st() {
 	_curl -F'file=@-' https://0x0.st <"$1"
 }
 
-available_services="dpaste_com ix_io termbin_com ttm_sh OxO_st"
+available_services="dpaste_com ix_io paste_rs termbin_com ttm_sh OxO_st"
 
 service_index_current=0
 service_index_max="$(printf '%s' "$available_services" | wc -w)"

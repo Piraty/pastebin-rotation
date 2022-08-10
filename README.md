@@ -9,6 +9,7 @@ The default mode is round-robin all available services.
 
 * [dpaste.com](https://dpaste.com)
 * [ix.io](http://ix.io)
+* [paste.rs](https://paste.rs)
 * [termbin.com](http://termbin.com)
 * [ttm.sh](https://ttm.sh)
 
