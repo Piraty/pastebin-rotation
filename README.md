@@ -1,13 +1,13 @@
-# pbr - pastebin service rotation
+# pbr - Pastebin Rotation
 
-Send stuff to various paste services.
+Send stuff to various paste bin services.
 
 The default mode is round-robin all available services.
 
 
-## Supported paste services
+## Supported Paste Services
 
-* [dpaste.com](https://dpaste.com/)
+* [dpaste.com](https://dpaste.com)
 * [ix.io](http://ix.io)
 * [termbin.com](http://termbin.com)
 * [ttm.sh](https://ttm.sh)
