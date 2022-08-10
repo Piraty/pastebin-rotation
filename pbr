@@ -17,11 +17,11 @@ store_index() {
 	printf '%s' "$index" >"$PBR_INDEX_FILE"
 }
 
-#
 # services
 #
 # all service wrapper functions expect exactly one argument, which needs to be
-# a path
+# a path.  convention is to redirect stdin from file ( < ) to ensure reading
+# from /dev/stdin works correctly
 
 _curl() {
 	curl -s "$@"
