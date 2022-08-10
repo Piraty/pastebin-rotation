@@ -23,12 +23,16 @@ store_index() {
 # all service wrapper functions expect exactly one argument, which needs to be
 # a path
 
+_curl() {
+	curl -s "$@"
+}
+
 dpaste_com() {
-	curl -F "content=<-" https://dpaste.com/api/v2/ <"$1"
+	_curl -F "content=<-" https://dpaste.com/api/v2/ <"$1"
 }
 
 ix_io() {
-	curl -F 'f:1=@-' ix.io <"$1"
+	_curl -F 'f:1=@-' ix.io <"$1"
 }
 
 termbin_com() {
@@ -36,11 +40,11 @@ termbin_com() {
 }
 
 ttm_sh() {
-	curl -F "file=@-" https://ttm.sh <"$1"
+	_curl -F "file=@-" https://ttm.sh <"$1"
 }
 
 OxO_st() {
-	curl -F'file=@-' https://0x0.st <"$1"
+	_curl -F'file=@-' https://0x0.st <"$1"
 }
 
 available_services="dpaste_com ix_io termbin_com ttm_sh OxO_st"
