@@ -1,5 +1,7 @@
 #!/bin/sh
 # [CMD] | pbr [FILE..] - send data to various paste services
+#
+# SPDX-License-Identifier: 0BSD
 
 set -eu
 
